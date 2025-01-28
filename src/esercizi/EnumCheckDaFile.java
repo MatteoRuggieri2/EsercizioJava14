@@ -13,6 +13,15 @@ public class EnumCheckDaFile {
 		
 	}
 	
+	/*TODO -> MODIFICHE DA FARE:
+	 * - Suddividere la logica in diversi metodi
+	 * es. Metodo che verifica se il brand è uno di quelli nell'enum
+	 *     e nel caso lo salva in definedBrands
+	 * es. Metodo che salva il brand in undefinedBrands se brandFound è rimasto false
+	 * 
+	 * - Aggiungere un metodo che trovi all'interno della riga il brand
+	 * - Per riconoscere che sia un brand o fai un array di stringhe o un enum CarBrands */
+	
 	private void run() {
 		String fileName = "src/text_files/auto-brands.txt";
 		String fileLine;
