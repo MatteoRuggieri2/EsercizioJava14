@@ -1,11 +1,14 @@
 package esercizi;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
 
 // FUNZIONA MA SUDDIVIDI IN METODI PER RIORDINARE
 public class EnumCheckDaFile {
+
+	private String fileName = "src/text_files/auto-brands.txt";
 
 	public static void main(String[] args) {
 		EnumCheckDaFile ecdf = new EnumCheckDaFile();
@@ -20,22 +23,35 @@ public class EnumCheckDaFile {
 	 * es. Metodo che salva il brand in undefinedBrands se brandFound è rimasto false
 	 * 
 	 * - Aggiungere un metodo che trovi all'interno della riga il brand
-	 * - Per riconoscere che sia un brand o fai un array di stringhe o un enum CarBrands */
+	 * - Per riconoscere che sia un brand o fai un array di stringhe o un enum CarBrands
+	 * - invece di usare il path assoluto per trovare il file usa quello relativo */
 	
 	private void run() {
-		String fileName = "src/text_files/auto-brands.txt";
 		String fileLine;
 		String undefinedBrands = "";
 		String definedBrands = "";
 		String brand;
 		String[] arrItems;
+
+		
+		
+		// Apro il file
+		FileReader autoBrandsFile = null;
+		try {
+			autoBrandsFile = new FileReader(fileName);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			System.exit(1);
+			//TODO -> Se il programma non trova il file, è inutile proseguire, arresta il programma.
+		}
+		
+		// Preparo il file alla lettura
+		BufferedReader bufferedReader = new BufferedReader(autoBrandsFile);
+		
+		
 		
 		try {
-			// Apro il file
-			FileReader autoBrandsFile = new FileReader(fileName);
 			
-			// Preparo il file alla lettura
-			BufferedReader bufferedReader = new BufferedReader(autoBrandsFile);
 			
 			// Finchè la riga non è vuota (ovvero null) stampo il contenuto
 			while ((fileLine = bufferedReader.readLine()) != null) {
