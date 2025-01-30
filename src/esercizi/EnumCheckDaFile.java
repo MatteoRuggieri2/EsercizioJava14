@@ -27,11 +27,10 @@ public class EnumCheckDaFile {
 	 * - invece di usare il path assoluto per trovare il file usa quello relativo */
 	
 	private void run() {
-		String fileLine;
 		String undefinedBrands = "";
 		String definedBrands = "";
 		String brand;
-		String[] arrItems;
+		String[] lineWordsArr;
 
 		
 		
@@ -41,8 +40,8 @@ public class EnumCheckDaFile {
 			autoBrandsFile = new FileReader(fileName);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-			System.exit(1);
-			//TODO -> Se il programma non trova il file, è inutile proseguire, arresta il programma.
+			System.err.println("\nProgramma terminato: exit 1\n");
+			System.exit(1); // Se il programma non trova il file, non può continuare, quindi lo termino.
 		}
 		
 		// Preparo il file alla lettura
@@ -50,21 +49,24 @@ public class EnumCheckDaFile {
 		
 		
 		
+		// Legge le righe, prende il brand dalla riga, cerca se il brand è contenuto nell'enum
+		String currentFileLine;
 		try {
 			
-			
 			// Finchè la riga non è vuota (ovvero null) stampo il contenuto
-			while ((fileLine = bufferedReader.readLine()) != null) {
+			while ((currentFileLine = bufferedReader.readLine()) != null) {
 				
-				arrItems = fileLine.strip().split(" +");   // .strip() toglie gli spazi davanti e dietro
+				lineWordsArr = currentFileLine.strip().split(" +");   // .strip() toglie gli spazi davanti e dietro
 				
 				// Stampo il brand
 				// System.out.println(fileLine);
-				brand = arrItems[0]; //TODO -> Da correggere, il brand non è sempre al primo posto
+				brand = lineWordsArr[0]; //TODO -> Da correggere, il brand non è sempre al primo posto
 				
 				// Found Flag
 				boolean brandFound = false;
 				
+				
+				//TODO -> CREA UN METODO CHE RITORNI TRUE O FALSE (passi enum e brand)
 				/* Verifico SE il brand è uguale a uno di quelli nell'enum, in caso
 				 * lo salvo in "definedBrands" */
 				for (EnumAuto enumBrandName : EnumAuto.values()) {
@@ -82,7 +84,7 @@ public class EnumCheckDaFile {
 					continue;
 				}
 				
-				checkModelli(brand, arrItems);
+				checkModelli(brand, lineWordsArr);
 				
 			}
 			
@@ -96,8 +98,10 @@ public class EnumCheckDaFile {
 		} catch (IOException e) {
 			System.err.println("Si è verificato un errore durante la lettura del file: " + e.getMessage());
 		}
-	}
-
+	}	
+	
+	/* Questo metodo stampa un report sui modelli contenuti nell'array passato.
+	 * In pratica, per ogni modello, dice se è definito oppure non all'interno di EnumAuto. */
 	private void checkModelli(String brand, String[] arrItems) {
 		EnumAuto enumBrand = EnumAuto.valueOf(brand);
 		String singleModel = "";
