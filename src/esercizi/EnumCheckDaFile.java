@@ -112,6 +112,17 @@ public class EnumCheckDaFile {
 		System.out.println("Brand indefiniti:\n" + undefinedBrands);
 	}
 	
+	/* Questo metodo controlla che il brand sia incluso nell'enumerazione "EnumAuto" */
+	private boolean checkBrandInEnum(String brand, EnumAuto enumAuto) {
+		for (EnumAuto enumBrand : EnumAuto.values()) {
+			if (enumBrand.name().equals(brand)) {   // Con .name() prendo il nome dell'enumerazione
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	
 	/* Questo metodo stampa un report sui modelli contenuti nell'array passato.
 	 * In pratica, per ogni modello, dice se è definito oppure non all'interno di EnumAuto. */
