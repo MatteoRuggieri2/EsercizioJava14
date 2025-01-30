@@ -26,13 +26,12 @@ public class EnumCheckDaFile {
 	 * - Per riconoscere che sia un brand o fai un array di stringhe o un enum CarBrands
 	 * - invece di usare il path assoluto per trovare il file usa quello relativo */
 	
+	
+	
+	
+	//TODO -> Modifica il file README.md (Al primo paragrafo vai a capo, e poi modifica il file di testo)
+	
 	private void run() {
-		String undefinedBrands = "";
-		String definedBrands = "";
-		String brand;
-		String[] lineWordsArr;
-
-		
 		
 		// Apro il file
 		FileReader autoBrandsFile = null;
@@ -47,58 +46,72 @@ public class EnumCheckDaFile {
 		// Preparo il file alla lettura
 		BufferedReader bufferedReader = new BufferedReader(autoBrandsFile);
 		
-		
-		
-		// Legge le righe, prende il brand dalla riga, cerca se il brand è contenuto nell'enum
-		String currentFileLine;
 		try {
-			
-			// Finchè la riga non è vuota (ovvero null) stampo il contenuto
-			while ((currentFileLine = bufferedReader.readLine()) != null) {
-				
-				lineWordsArr = currentFileLine.strip().split(" +");   // .strip() toglie gli spazi davanti e dietro
-				
-				// Stampo il brand
-				// System.out.println(fileLine);
-				brand = lineWordsArr[0]; //TODO -> Da correggere, il brand non è sempre al primo posto
-				
-				// Found Flag
-				boolean brandFound = false;
-				
-				
-				//TODO -> CREA UN METODO CHE RITORNI TRUE O FALSE (passi enum e brand)
-				/* Verifico SE il brand è uguale a uno di quelli nell'enum, in caso
-				 * lo salvo in "definedBrands" */
-				for (EnumAuto enumBrandName : EnumAuto.values()) {
-					if (enumBrandName.name().equals(brand)) {   // Con .name() prendo il nome dell'enumerazione
-						definedBrands += "- " + brand + " (Auto prodotte: " + EnumAuto.autoProduced(brand) + ")\n";
-						brandFound = true;
-						break;
-					}
-				}
-				
-				/* SE il flag "brandFound" è rimasto a FALSE vuol dire che il brand non
-				 * è incluso tra quelli nell'enum, quindi lo aggiungo a "undefinedBrands" */
-				if (!brandFound) {
-					undefinedBrands += "- " + brand + "\n";
-					continue;
-				}
-				
-				checkModelli(brand, lineWordsArr);
-				
-			}
-			
-			// Chiudo il bufferedReader per non sprecare risorse del sistema
-			bufferedReader.close();
-			
-			System.out.println("Brand definiti:\n" + definedBrands); // con "\n" posso andare a capo nel print
-			System.out.println("Brand indefiniti:\n" + undefinedBrands);
-			
-			
+			checkFile(bufferedReader);
 		} catch (IOException e) {
+			e.printStackTrace();
 			System.err.println("Si è verificato un errore durante la lettura del file: " + e.getMessage());
 		}
-	}	
+		
+	}
+
+	
+	private void checkFile(BufferedReader br) throws IOException {
+		// Leggo la prima riga del file
+		String currentFileLine = br.readLine();
+		String[] currentLineWords;
+		String currentLineBrand;
+		
+		String undefinedBrands = "";
+		String definedBrands = "";
+		
+		while (currentFileLine != null) {
+			
+			currentLineWords = currentFileLine.strip().split(" +");   // .strip() toglie gli spazi davanti e dietro
+			currentLineBrand = currentLineWords[0]; //TODO -> Da correggere, il brand non è sempre al primo posto
+			
+			
+			// Found Flag
+			boolean brandFound = false;
+			
+			
+			//TODO -> CREA UN METODO CHE RITORNI TRUE O FALSE (passi enum e brand)
+			/* Verifico SE il brand è uguale a uno di quelli nell'enum, in caso
+			 * lo salvo in "definedBrands" */
+			for (EnumAuto enumBrandName : EnumAuto.values()) {
+				if (enumBrandName.name().equals(currentLineBrand)) {   // Con .name() prendo il nome dell'enumerazione
+					definedBrands += "- " + currentLineBrand + " (Auto prodotte: " + EnumAuto.autoProduced(currentLineBrand) + ")\n";
+					brandFound = true;
+					break;
+				}
+			}
+			
+			/* SE il flag "brandFound" è rimasto a FALSE vuol dire che il brand non
+			 * è incluso tra quelli nell'enum, quindi lo aggiungo a "undefinedBrands" */
+			if (!brandFound) {
+				undefinedBrands += "- " + currentLineBrand + "\n";
+				
+				// Leggo la prossima riga
+				currentFileLine = br.readLine();
+				continue; // Questo non mi fa leggere la nuova riga
+			}
+			
+			
+			
+			// Stampo il report dei modelli (definiti e non definiti)
+			checkModelli(currentLineBrand, currentLineWords);
+			
+			// Leggo la prossima riga
+			currentFileLine = br.readLine();
+		}
+		
+		br.close();
+		
+		//TODO -> Stampo i brand definiti e indefiniti
+		System.out.println("Brand definiti:\n" + definedBrands); // con "\n" posso andare a capo nel print
+		System.out.println("Brand indefiniti:\n" + undefinedBrands);
+	}
+	
 	
 	/* Questo metodo stampa un report sui modelli contenuti nell'array passato.
 	 * In pratica, per ogni modello, dice se è definito oppure non all'interno di EnumAuto. */
