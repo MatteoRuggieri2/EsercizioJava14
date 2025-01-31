@@ -15,6 +15,7 @@ public class EnumCheckDaFile {
 	private String definedBrands = "";
 	
 	private String[] autoBrands = {
+			
 			"Bmw",
 			"Dacia",
 			"Mercedes",
@@ -27,17 +28,16 @@ public class EnumCheckDaFile {
 			"Skoda",
 			"Kia",
 			"Toyota",
-			"Ford"};
+			"Ford"
+	};
 
+	
+	
 	public static void main(String[] args) {
 		EnumCheckDaFile ecdf = new EnumCheckDaFile();
 		ecdf.run();
 		
 	}
-	
-
-	
-	//TODO -> Modifica il file README.md (Al primo paragrafo vai a capo, e poi modifica il file di testo)
 	
 	private void run() {
 		
@@ -62,8 +62,8 @@ public class EnumCheckDaFile {
 		}
 		
 	}
-
 	
+	// Questo metodo principale controlla il contenuto del file e stampa il report.
 	private void checkFile(BufferedReader br) throws IOException {
 		// Leggo la prima riga del file
 		String currentFileLine = br.readLine();
@@ -98,10 +98,7 @@ public class EnumCheckDaFile {
 		}
 		
 		br.close();
-		
-		//TODO -> Stampo i brand definiti e indefiniti
-		System.out.println("Brand definiti:\n" + definedBrands); // con "\n" posso andare a capo nel print
-		System.out.println("Brand indefiniti:\n" + undefinedBrands);
+		brandsReport();
 	}
 	
 	/* Questo metodo trova all'interno di un array di stringhe il Brand,
@@ -118,8 +115,6 @@ public class EnumCheckDaFile {
 		return null;
 	}
 	
-	// TODO -> Cosa succede quando ho solo 1 parola tipo BMW?
-	// TODO -> Devo richiamare questa funzione sempre o solo in alcuni casi?
 	// Questo metodo rimuove il brand da "currentLineWords" per ottenere un array di soli modelli
 	private String[] removeBrandFromCurrentLineWords(String brand, String[] currentLineWords) {
 		int arrSize = currentLineWords.length;
@@ -182,6 +177,12 @@ public class EnumCheckDaFile {
 				System.out.println("Il modello " + singleModel + " del brand " + brand + " non è definito");
 			}
 		}
+	}
+	
+	/* Questo metodo stampa il report dei brand, quelli definiti e quelli non definiti */
+	private void brandsReport() {
+		System.out.println("Brand definiti:\n" + definedBrands);
+		System.out.println("Brand indefiniti:\n" + undefinedBrands);
 	}
 
 }

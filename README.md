@@ -22,7 +22,7 @@ _Per ogni marca definita, verificare anche quali sono i modelli prodotti definit
 
 ```txt
 BMW
-STELLANTIS TIPO PANDA 500
+TIPO STELLANTIS PANDA 500
 AUDI A4 A5 A6
 VW
 CITROEN
