@@ -4,7 +4,7 @@ public enum EnumAuto {
 	STELLANTIS("TIPO", "PANDA", "500"),
 	AUDI("A4"),
 	TESLA("T1"),
-	VW,
+	VOLKSWAGEN,
 	CITROEN;
 	
 	private String[] arrModello;

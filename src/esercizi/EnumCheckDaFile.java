@@ -9,8 +9,25 @@ import java.io.IOException;
 public class EnumCheckDaFile {
 
 	private String fileName = "src/text_files/auto-brands.txt";
+	
 	private String undefinedBrands = "";
+	
 	private String definedBrands = "";
+	
+	private String[] autoBrands = {
+			"Bmw",
+			"Dacia",
+			"Mercedes",
+			"Audi",
+			"Porsche",
+			"Volkswagen",
+			"Stellantis",
+			"Tesla",
+			"Citroen",
+			"Skoda",
+			"Kia",
+			"Toyota",
+			"Ford"};
 
 	public static void main(String[] args) {
 		EnumCheckDaFile ecdf = new EnumCheckDaFile();
@@ -18,8 +35,7 @@ public class EnumCheckDaFile {
 		
 	}
 	
-	/*TODO -> MODIFICHE DA FARE:
-	 *  - Aggiungere un metodo che trovi all'interno della riga il brand*/
+
 	
 	//TODO -> Modifica il file README.md (Al primo paragrafo vai a capo, e poi modifica il file di testo)
 	
@@ -53,10 +69,12 @@ public class EnumCheckDaFile {
 		String currentFileLine = br.readLine();
 		String[] currentLineWords;
 		String currentLineBrand;
+		String[] currentLineBrandModels;
 		
 		while (currentFileLine != null) {
 			currentLineWords = currentFileLine.strip().split(" +");   // .strip() toglie gli spazi davanti e dietro
-			currentLineBrand = currentLineWords[0]; //TODO -> Da correggere, il brand non è sempre al primo posto
+			currentLineBrand = findBrandInTheLine(currentLineWords);
+			currentLineBrandModels = removeBrandFromCurrentLineWords(currentLineBrand, currentLineWords);
 			
 			/* Verifico se il brand è incluso nell'enum, in caso positivo
 			 * lo salvo in "definedBrands", altrimenti in "undefinedBrands" */
@@ -71,7 +89,7 @@ public class EnumCheckDaFile {
 			}
 			
 			// Stampo il report dei modelli (definiti e non definiti)
-			checkModelli(currentLineBrand, currentLineWords);
+			reportModelli(currentLineBrand, currentLineWords);
 			
 			// Leggo la prossima riga
 			currentFileLine = br.readLine();
@@ -82,6 +100,36 @@ public class EnumCheckDaFile {
 		//TODO -> Stampo i brand definiti e indefiniti
 		System.out.println("Brand definiti:\n" + definedBrands); // con "\n" posso andare a capo nel print
 		System.out.println("Brand indefiniti:\n" + undefinedBrands);
+	}
+	
+	/* Questo metodo trova all'interno di un array di stringhe il Brand,
+	 * utilizzando come ricerca un array contenente molti brand */
+	private String findBrandInTheLine(String[] lineWords) {
+		for (String word : lineWords) {
+			for (String autoBrand : autoBrands) {
+				if (word.equalsIgnoreCase(autoBrand)) {
+					return word;
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	// Questo metodo rimuove il brand da "currentLineWords" per ottenere un array di soli modelli
+	private String[] removeBrandFromCurrentLineWords(String brand, String[] currentLineWords) {
+		int arrSize = currentLineWords.length;
+		String autoModels[] = new String[arrSize - 1];
+		
+		for (int i = 0; i < currentLineWords.length; i++) {
+			String lineWord = currentLineWords[i];
+			
+			if (!lineWord.equalsIgnoreCase(brand)) {
+				autoModels[i] = lineWord;
+			}
+		}
+		
+		return autoModels;
 	}
 	
 	/* Questo metodo controlla che il brand sia incluso nell'enumerazione "EnumAuto" */
@@ -100,19 +148,19 @@ public class EnumCheckDaFile {
 		definedBrands += "- " + brand + " (Auto prodotte: " + EnumAuto.autoProduced(brand) + ")\n";
 	}
 	
-	// Questo metodo concatena il brand alla stringa "undefinedBrands"
+	// Questo metodo concatena il brand alla stringa "unDdefinedBrands"
 	private void saveToUndefinedBrands(String brand) {
 		undefinedBrands += "- " + brand + "\n";
 	}
 	
 	/* Questo metodo stampa un report sui modelli contenuti nell'array passato.
 	 * In pratica, per ogni modello, dice se è definito oppure non all'interno di EnumAuto. */
-	private void checkModelli(String brand, String[] arrItems) {
+	private void reportModelli(String brand, String[] lineWords) {
 		EnumAuto enumBrand = EnumAuto.valueOf(brand);
 		String singleModel = "";
 		
-		for (int i = 1; i < arrItems.length; i++) {
-			singleModel = arrItems[i];
+		for (int i = 1; i < lineWords.length; i++) { // DA MODIFICARE i
+			singleModel = lineWords[i];
 			if (enumBrand.isModelDefined(singleModel)) {
 				System.out.println("Il modello " + singleModel + " del brand " + brand + " è definito");
 			} else {
