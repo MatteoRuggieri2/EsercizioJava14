@@ -74,7 +74,6 @@ public class EnumCheckDaFile {
 		while (currentFileLine != null) {
 			currentLineWords = currentFileLine.strip().split(" +");   // .strip() toglie gli spazi davanti e dietro
 			currentLineBrand = findBrandInTheLine(currentLineWords);
-			currentLineBrandModels = removeBrandFromCurrentLineWords(currentLineBrand, currentLineWords);
 			
 			/* Verifico se il brand è incluso nell'enum, in caso positivo
 			 * lo salvo in "definedBrands", altrimenti in "undefinedBrands" */
@@ -88,8 +87,11 @@ public class EnumCheckDaFile {
 				continue;
 			}
 			
+			// Prendo i modelli nella riga
+			currentLineBrandModels = removeBrandFromCurrentLineWords(currentLineBrand, currentLineWords);
+
 			// Stampo il report dei modelli (definiti e non definiti)
-			reportModelli(currentLineBrand, currentLineWords);
+			reportModelli(currentLineBrand, currentLineBrandModels);
 			
 			// Leggo la prossima riga
 			currentFileLine = br.readLine();
@@ -116,6 +118,8 @@ public class EnumCheckDaFile {
 		return null;
 	}
 	
+	// TODO -> Cosa succede quando ho solo 1 parola tipo BMW?
+	// TODO -> Devo richiamare questa funzione sempre o solo in alcuni casi?
 	// Questo metodo rimuove il brand da "currentLineWords" per ottenere un array di soli modelli
 	private String[] removeBrandFromCurrentLineWords(String brand, String[] currentLineWords) {
 		int arrSize = currentLineWords.length;
@@ -124,9 +128,20 @@ public class EnumCheckDaFile {
 		for (int i = 0; i < currentLineWords.length; i++) {
 			String lineWord = currentLineWords[i];
 			
+			// Se la parola è diversa dal brand vuoi dire che è un modello, quindi lo salvo
 			if (!lineWord.equalsIgnoreCase(brand)) {
-				autoModels[i] = lineWord;
+				
+				// Salvo il modello nel primo posto libero dell'array "autoModels"
+				for (int j = 0; j < autoModels.length; j++) {
+					String model = autoModels[j];
+					if (model == null) {
+						autoModels[j] = lineWord;
+						break;
+					}
+					
+				}
 			}
+			
 		}
 		
 		return autoModels;
@@ -155,12 +170,12 @@ public class EnumCheckDaFile {
 	
 	/* Questo metodo stampa un report sui modelli contenuti nell'array passato.
 	 * In pratica, per ogni modello, dice se è definito oppure non all'interno di EnumAuto. */
-	private void reportModelli(String brand, String[] lineWords) {
+	private void reportModelli(String brand, String[] lineModels) {
 		EnumAuto enumBrand = EnumAuto.valueOf(brand);
 		String singleModel = "";
 		
-		for (int i = 1; i < lineWords.length; i++) { // DA MODIFICARE i
-			singleModel = lineWords[i];
+		for (int i = 0; i < lineModels.length; i++) {
+			singleModel = lineModels[i];
 			if (enumBrand.isModelDefined(singleModel)) {
 				System.out.println("Il modello " + singleModel + " del brand " + brand + " è definito");
 			} else {
